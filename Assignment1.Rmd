@@ -1,0 +1,46 @@
+---
+title: "Assignment_1"
+author: '"ADITI"'
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+#Dataset - https://www.kaggle.com/datasets/aungpyaeap/supermarket-sales
+
+View(supermarket_sales)
+head(supermarket_sales,5)#read the first 5 rows of the dataset
+
+sum(is.na(supermarket_sales))#To check the null values in a dataset
+
+
+summary(supermarket_sales) #sumarise the dataset
+
+library(dplyr)
+
+print(select_if(supermarket_sales, is.numeric))#check the numeric columns of the dataset
+
+numeric_columns <- supermarket_sales[sapply(supermarket_sales, is.numeric)]
+print(numeric_columns)
+
+#Data Transformation
+By_total = group_by(supermarket_sales, Gender)
+summarise(By_total, Avg_total = mean(Total), qty = n())#Here the overview of sales according to the gender is evaluated. As well as average total is calculatd.
+
+
+
+## Including Plots
+
+library(ggplot2)
+ggplot(data= supermarket_sales, aes(x= Branch, y= Total)) +
+  geom_bar(stat="identity", color="blue", fill="white")
+  
+ggplot(supermarket_sales, aes(x= Quantity, y= Total )) +
+  geom_point(size=2, shape=21)
+  
+
+  
+  
+
+
