@@ -1,0 +1,45 @@
+---
+title: "A1"
+author: '"ADITI"'
+date: "`r Sys.Date()`"
+output: word_document
+---
+#Dataset - https://www.kaggle.com/datasets/aungpyaeap/supermarket-sales
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+Supermarket <- read_csv("C:/Users/tiwar/OneDrive/Desktop/FML ASSIGNMENT/supermarket_sales - Sheet1.csv",show_col_types = FALSE)
+```
+
+```{r supermarket_sales_Sheet1}
+View(Supermarket)
+summary(Supermarket)
+```
+```{r}
+head(Supermarket,5)#read the first 5 rows of the dataset
+numeric_columns <- Supermarket[sapply(Supermarket, is.numeric)]
+print(numeric_columns)
+```
+```{r}
+dim(Supermarket)#It gives the dimension of the dataset
+sum(is.na(Supermarket))#To check the null values in a dataset
+```
+
+```{r}
+library(dplyr)
+By_total = group_by(Supermarket, Gender)
+summarise(By_total, Avg_total = mean(Total), qty = n())#Here the overview of sales according to the gender is evaluated. As well as average total is calculatd.
+```
+
+## Including Plots
+```{r}
+x <-  Supermarket$Quantity
+y <- Supermarket$cogs
+plot(x, y, col = "orange",xlab="Quantity", ylab="Cost of Goods Sale")
+```
+```{r}
+x <-  Supermarket$'Unit price'
+y <- Supermarket$'Total'
+plot(x, y, col = "red", main="Unit Price Vs Total",
+  xlab="Unit price", ylab="Total")
+```
