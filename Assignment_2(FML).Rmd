@@ -1,0 +1,32 @@
+---
+title: "Assignment_2(fml)"
+author: '"ADITI"'
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+#1) Age = 40, Experience = 10, Income = 84, Family = 2, CCAvg = 2, Education_1 = 0, Education_2 =1, Education_3 = 0, Mortgage = 0, Securities Account = 0, CD Account = 0, Online = 1, and Credit Card = 1. Perform a k-NN classification with all predictors except ID and ZIP code using k = 1. Remember to transform categorical predictors with more than two categories into dummy variables first. Specify the success class as 1 (loan acceptance), and use the default cutoff value of 0.5. How would this customer be classified?
+data$Education <- as.factor(data$Education)
+
+#create dummy variables of categorical variables
+data.frame(data)
+library(fastDummies)
+data1_dummy = dummy_cols(data)
+head(data1_dummy)
+
+#remove columns ID and ZIP code 
+final_data <- subset(data1_dummy, select = -c(ID,ZIP.Code))
+final_data
+```
+```{r}
+set.seed(11)
+final_data$Personal.Loan <- as.factor(final_data$Personal.Loan)
+final_data
+```
+
+
+
+
