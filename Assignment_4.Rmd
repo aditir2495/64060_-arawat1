@@ -1,0 +1,88 @@
+---
+title: "Assignment_4 (FML)"
+author: '"ADITI"'
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  html_document: default
+---
+```{r}
+#read the csv file
+pharma_data <- read.csv("C:/Users/tiwar/OneDrive/Desktop/FML ASSIGNMENT/Pharmaceuticals.csv")
+
+#read the first five rows of pharma_data
+head(pharma_data)
+```
+```{r}
+#read the last five rows of pharma_data
+tail(pharma_data)
+```
+```{r}
+#nrow and ncol will return both no of rows and no of columns in pharma_data
+nrow(pharma_data)
+ncol(pharma_data)
+```
+```{r}
+#selecting all the columns -
+library(dplyr)
+pharma_data1 <- select_if(pharma_data,is.numeric)
+pharma_data1 <- pharma_data1[1:9]
+pharma_data1
+```
+```{r}
+set.seed(222)
+library(factoextra)
+library(ISLR)
+library(cluster)
+scaled_pharmadt <- scale(pharma_data1)
+distance <- get_dist(scaled_pharmadt)
+fviz_dist(distance)
+```
+```{r}
+#Determine the optimal number of clusters using the elbow method (WSS)
+wss_plt <- fviz_nbclust(scaled_pharmadt, kmeans, method = "wss")+labs(subtitle = "Elbow method")
+print(wss_plt)
+```
+```{r}
+set.seed(333)
+# Determine the optimal number of clusters using the silhouette method
+sil_plt <- fviz_nbclust(scaled_pharmadt, kmeans, method = "silhouette")+labs(subtitle = "Silhouette method")
+print(sil_plt)
+```
+
+```{r}
+set.seed(111)
+fviz_nbclust(scaled_pharmadt, kmeans, nstart = 10,  method = "gap_stat", nboot = 50)+labs(subtitle = "Gap statistic method")
+```
+```{r}
+#K-means clusters
+k4 <- kmeans(scaled_pharmadt,centers = 4, nstart = 25)
+k4$centers
+```
+```{r}
+k4$size
+k4$cluster[21]
+```
+```{r}
+#cluster plot
+fviz_cluster(k4 , data = scaled_pharmadt) #so there are 4 clusters formed.
+```
+```{r}
+library(flexclust)
+set.seed(111)
+k4 <- kcca(scaled_pharmadt, k = 4 , kccaFamily("kmedians"))
+k4
+```
+```{r}
+#apply the predict functon
+cluster_index <- predict(k4)
+image(k4)
+points(scaled_pharmadt, col = cluster_index, pch = 15 , cex = 0.2)
+```
+```{r}
+# Appylyig knn for other numeric data from the pharma_data.
+pharma_data
+pharma_data2 <- pharma_data[12:14]
+pharma_data2
+```
+
