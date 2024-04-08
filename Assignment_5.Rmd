@@ -1,0 +1,104 @@
+---
+title: "Cereals_data"
+author: '"ADITI"'
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  html_document: default
+---
+```{r}
+cereals_data <- read.csv("C:/Users/tiwar/Downloads/Cereals.csv")#read the cereal dataset.
+cereals_data
+```
+```{r}
+head(cereals_data)#extracting the forst five rows of dataset.
+tail(cereals_data)#extracting the last five rows of dataset.
+```
+```{r}
+summary(cereals_data)
+colSums(is.na(cereals_data))#get the null values of different columns
+df<- na.omit(cereals_data)#remove the null values
+sum(is.na(df))#counting the no of missing values
+```
+
+Apply hierarchical clustering to the data using Euclidean distance to the normalized measurements. Use Agnes to compare the clustering from single linkage, complete linkage, average linkage, and Ward. Choose the best method.
+
+```{r}
+library(cluster)  # clustering algorithms
+library(factoextra) # visualization
+df <- scale(df[4:16])
+distances <- dist(df,method = "euclidean")
+
+#Hierachical clustering using complete linkage
+
+hc <- hclust(distances,method = "complete")
+
+#plot the obtained dendogram
+plot(hc ,cex = 0.8,hang = -2)
+```
+```{r}
+set.seed(111)
+library(cluster)
+df
+# Compute with agnes and with different linkage methods
+hc_single <- agnes(df, method = "single")
+hc_complete <- agnes(df, method = "complete")
+hc_average <- agnes(df, method = "average")
+hc_ward <- agnes(df,method = "ward")
+
+# Compare Agglomerative coefficients
+scale(df)
+print(hc_single$ac)
+
+print(hc_complete$ac)
+
+print(hc_average$ac)
+
+print(hc_ward$ac)
+```
+```{r}
+pltree(hc_ward, cex = 0.6, hang = -1, main = "Dendrogram of agnes")
+```
+```{r}
+d1 <- dist(df, method = "euclidean")
+# compute divisive hierarchical clustering
+hierc_complete <- hclust(d1,method = "complete")
+# plot dendrogram
+plot(hierc_complete, cex = 0.6)
+rect.hclust(hierc_complete, k = 3, border = 1:4)
+```
+How many clusters would you choose?
+I would choose 4 clusters.
+
+Comment on the structure of the clusters and on their stability. Hint: To check stability, partition the data and see how well clusters formed based on one part apply to the other part. To do this: ● Cluster partition A ● Use the cluster centroids from A to assign each record in partition B (each record is assigned to the cluster with the closest centroid). ● Assess how consistent the cluster assignments are compared to the assignments based on all the data.
+
+```{r}
+d2 <- dist(df, method = "euclidean")
+# compute divisive hierarchical clustering
+hierc_ward <- hclust(d2,method = "ward.D")
+hierc_ward
+plot(hierc_ward,hang = -1,cex = 0.8)
+# Choosing no. of clusters
+# Cutting tree by height
+abline(h = 120, col = "orange")
+ 
+# Cutting tree by no. of clusters
+fit <- cutree(hierc_ward, k = 4 )
+fit
+table(fit)
+rect.hclust(hierc_ward, k = 4, border = "green")
+```
+The elementary public schools would like to choose a set of cereals to include in their daily cafeterias. Every day a different cereal is offered, but all cereals should support a healthy diet. For this goal, you are requested to find a cluster of “healthy cereals.” Should the data be normalized? If not, how should they be used in the cluster analysis?
+
+```{r}
+library(cluster)
+
+# Standardization (Z-score normalization)
+norm_df <- scale(df)
+# Hierarchical clustering
+hc <- hclust(dist(norm_df), method = "ward.D")#used ward method
+
+# Plot dendrogram
+plot(hc, main = "Hierarchical Clustering Dendrogram (Normalized Data)",cex = 0.6,hang = -2)
+```
+
